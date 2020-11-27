@@ -53,10 +53,19 @@ def make_dataset(dataset, dataroot, imageSize):
         dataset = dset.CIFAR10(root=dataroot, download=True,
                                transform=transforms.Compose([
                                    transforms.Resize(imageSize),
+                                   transforms.CenterCrop(imageSize),
                                    transforms.ToTensor(),
                                    transforms.Normalize(
                                        (0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
                                ]))
+     elif dataset == 'emnist':
+        dataset = dset.EMNIST(root=dataroot,download=True
+                                   transform=transforms.Compose([
+                                       transforms.Resize(imageSize),
+                                       transforms.ToTensor(),
+                                       transforms.Normalize(
+                                           (0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+                                   ]))
     elif dataset == 'celeba':
         dataset = dset.ImageFolder(root=dataroot,
                                    transform=transforms.Compose([
