@@ -58,7 +58,7 @@ def make_dataset(dataset, dataroot, imageSize):
                                    transforms.Normalize(
                                        (0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
                                ]))
-     elif dataset == 'emnist':
+    elif dataset == 'emnist':
         dataset = dset.EMNIST(root=dataroot,download=True
                                    transform=transforms.Compose([
                                        transforms.Resize(imageSize),
@@ -436,3 +436,4 @@ def compute_score_raw(dataset, imageSize, dataroot, sampleSize, batchSize,
     score[29] = mode_score(feature_r[3], feature_f[3])
     score[30] = fid(feature_r[3], feature_f[3])
     return score
+
