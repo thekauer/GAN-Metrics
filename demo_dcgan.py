@@ -156,7 +156,7 @@ if __name__ == '__main__':
     nz = int(opt.nz)
     ngf = int(opt.ngf)
     ndf = int(opt.ndf)
-    nc = 3
+    nc = 1
 
     netG = Generator(ngpu).to(device)
     netG.apply(weights_init)
