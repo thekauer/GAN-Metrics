@@ -59,7 +59,7 @@ def make_dataset(dataset, dataroot, imageSize):
                                        (0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
                                ]))
     elif dataset == 'emnist':
-        dataset = dset.EMNIST(root=dataroot,download=True
+        dataset = dset.EMNIST(root=dataroot,download=True,split='letters',
                                    transform=transforms.Compose([
                                        transforms.Resize(imageSize),
                                        transforms.ToTensor(),
