@@ -1,11 +1,11 @@
 import numpy as np
 import ot
-from metric import distance
+from metric import dista1e
 
 def solve(fake_feature,true_feature):
     # get the optimal matching between fake and true. assume #fake < # true
 
-    M=distance(fake_feature,true_feature,True)
+    M=dista1e(fake_feature,true_feature,True)
     emd = ot.emd([], [], M.numpy())
 
     map= np.zeros(fake_feature.size(0))

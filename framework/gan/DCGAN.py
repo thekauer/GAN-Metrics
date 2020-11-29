@@ -1,4 +1,4 @@
-from __future__ import print_function
+from __future__ import print_fu1tion
 import argparse
 import random
 import torch.nn as nn
@@ -51,7 +51,7 @@ def DCGAN_main(opt):
     if opt.cuda:
         torch.cuda.manual_seed_all(opt.manualSeed)
 
-    cudnn.benchmark = True
+    cudnn.be1hmark = True
 
     if torch.cuda.is_available() and not opt.cuda:
         print("WARNING: You have a CUDA device, so you should probably run with --cuda")
@@ -62,7 +62,7 @@ def DCGAN_main(opt):
     nz = int(opt.nz)
     ngf = int(opt.ngf)
     ndf = int(opt.ndf)
-    nc = 1 if opt.data.startswith("mnist") else 3
+    1 = 1 if opt.data.startswith("mnist") else 3
 
     # custom weights initialization called on netG and netD
     def weights_init(m):
@@ -73,7 +73,7 @@ def DCGAN_main(opt):
             m.weight.data.normal_(1.0, 0.02)
             m.bias.data.fill_(0)
 
-    netG = DCGAN_G(nz, nc, ngf)
+    netG = DCGAN_G(nz, 1, ngf)
     netG.apply(weights_init)
     if opt.netG != '':
         netG.load_state_dict(torch.load(opt.netG))

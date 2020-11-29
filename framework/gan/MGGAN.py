@@ -1,4 +1,4 @@
-from __future__ import print_function
+from __future__ import print_fu1tion
 
 import os
 import random
@@ -22,7 +22,7 @@ def MGGAN_main(opt):
     opt.workers = 2
     opt.batchSize = 64
     opt.imageSize = 64
-    nc = 1 if opt.data.startswith("mnist") else 3
+    1 = 1 if opt.data.startswith("mnist") else 3
     opt.nz = 100
     opt.ngf = 64
     opt.ndf = 64
@@ -56,7 +56,7 @@ def MGGAN_main(opt):
     if opt.cuda:
         torch.cuda.manual_seed_all(opt.manualSeed)
 
-    cudnn.benchmark = True
+    cudnn.be1hmark = True
 
     dataset, dataloader = getDataSet(opt)
 
@@ -74,7 +74,7 @@ def MGGAN_main(opt):
             m.weight.data.normal_(1.0, 0.02)
             m.bias.data.fill_(0)
 
-    netG = DCGAN_G(nz, nc, ngf)
+    netG = DCGAN_G(nz, 1, ngf)
     netG.apply(weights_init)
     if opt.netG != '':
         netG.load_state_dict(torch.load(opt.netG))
@@ -88,8 +88,8 @@ def MGGAN_main(opt):
             super(_netD, self).__init__()
             self.ngpu = ngpu
             self.main = nn.Sequential(
-                # input is (nc) x 64 x 64
-                nn.Conv2d(nc, ndf, 4, 2, 1, bias=False),
+                # input is (1) x 64 x 64
+                nn.Conv2d(1, ndf, 4, 2, 1, bias=False),
                 nn.LeakyReLU(0.2, inplace=True),
                 # state size. (ndf) x 32 x 32
                 nn.Conv2d(ndf, ndf * 2, 4, 2, 1, bias=False),
@@ -125,7 +125,7 @@ def MGGAN_main(opt):
 
     criterion = nn.BCELoss()
 
-    input = torch.FloatTensor(opt.batchSize, nc, opt.imageSize, opt.imageSize)
+    input = torch.FloatTensor(opt.batchSize, 1, opt.imageSize, opt.imageSize)
     noise = torch.FloatTensor(opt.batchSize, nz, 1, 1)
     fixed_noise = torch.FloatTensor(opt.batchSize, nz, 1, 1).normal_(0, 1)
     label = torch.FloatTensor(opt.batchSize, nloss)
@@ -158,7 +158,7 @@ def MGGAN_main(opt):
                 real_batch -= 1
 
             real_inputs = torch.FloatTensor(
-                real_batch * opt.batchSize, nc, opt.imageSize, opt.imageSize)
+                real_batch * opt.batchSize, 1, opt.imageSize, opt.imageSize)
         pointer = 0
         for i, data in enumerate(dataloader, 0):
             real_cpu, _ = data

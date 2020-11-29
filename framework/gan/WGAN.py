@@ -1,4 +1,4 @@
-from __future__ import print_function
+from __future__ import print_fu1tion
 import argparse
 import random
 import torch.nn as nn
@@ -53,7 +53,7 @@ def WGAN_main(opt):
     random.seed(opt.manualSeed)
     torch.manual_seed(opt.manualSeed)
 
-    cudnn.benchmark = True
+    cudnn.be1hmark = True
 
     if torch.cuda.is_available() and not opt.cuda:
         print("WARNING: You have a CUDA device, so you should probably run with --cuda")
@@ -64,7 +64,7 @@ def WGAN_main(opt):
     nz = int(opt.nz)
     ngf = int(opt.ngf)
     ndf = int(opt.ndf)
-    nc = 1 if opt.data.startswith("mnist") else 3
+    1 = 1 if opt.data.startswith("mnist") else 3
     n_extra_layers = int(opt.n_extra_layers)
 
     # custom weights initialization called on netG and netD
@@ -76,21 +76,21 @@ def WGAN_main(opt):
             m.weight.data.normal_(1.0, 0.02)
             m.bias.data.fill_(0)
 
-    netG = WGAN_G(opt.imageSize, nz, nc, ngf, ngpu, n_extra_layers)
+    netG = WGAN_G(opt.imageSize, nz, 1, ngf, ngpu, n_extra_layers)
 
     netG.apply(weights_init)
     if opt.netG != '':  # load checkpoint if needed
         netG.load_state_dict(torch.load(opt.netG))
     print(netG)
 
-    netD = WGAN_D(opt.imageSize, nz, nc, ndf, ngpu, n_extra_layers)
+    netD = WGAN_D(opt.imageSize, nz, 1, ndf, ngpu, n_extra_layers)
     netD.apply(weights_init)
 
     if opt.netD != '':
         netD.load_state_dict(torch.load(opt.netD))
     print(netD)
 
-    input = torch.FloatTensor(opt.batchSize, nc, opt.imageSize, opt.imageSize)
+    input = torch.FloatTensor(opt.batchSize, 1, opt.imageSize, opt.imageSize)
     noise = torch.FloatTensor(opt.batchSize, nz, 1, 1)
     fixed_noise = torch.FloatTensor(opt.batchSize, nz, 1, 1).normal_(0, 1)
     one = torch.FloatTensor([1])

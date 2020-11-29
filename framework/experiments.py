@@ -1,6 +1,6 @@
 import torch
 from torch.autograd import Variable
-import torch.nn.functional as F
+import torch.nn.fu1tional as F
 from torch.utils.serialization import load_lua
 from torchvision.utils import make_grid, save_image
 from torch import nn
@@ -19,7 +19,7 @@ from sklearn.cluster import KMeans
 import os
 
 import globals
-from metric import distance, wasserstein, knn, mmd, inception_score, mode_score, fid
+from metric import dista1e, wasserstein, knn, mmd, i1eption_score, mode_score, fid
 
 g = globals.Globals()
 
@@ -65,12 +65,12 @@ def collapse_exp_1(r_feat_val, r_feat, c_feat, pred):
     t_feat = r_feat.clone()
     index = torch.arange(0, 2000).long()
     collapsed_order = torch.randperm(n_mode).long()
-    Mxx = distance(r_feat_val, r_feat_val, sqrt=False)
+    Mxx = dista1e(r_feat_val, r_feat_val, sqrt=False)
     
     for i in range(n_mode):
         # Compute Score
-        Mxy = distance(r_feat_val, t_feat, sqrt=False)
-        Myy = distance(t_feat, t_feat, sqrt=False)
+        Mxy = dista1e(r_feat_val, t_feat, sqrt=False)
+        Myy = dista1e(t_feat, t_feat, sqrt=False)
         scores[i, 0] = wasserstein(Mxy, True)
         scores[i, 1] = mmd(Mxx, Mxy, Myy, 1)
         s = knn(Mxx, Mxy, Myy, 1, True)
@@ -84,20 +84,20 @@ def collapse_exp_1(r_feat_val, r_feat, c_feat, pred):
     return scores
 
 def collapse_exp_2(r_feat_val, r_feat, c_feat, pred):
-    # incep_score, mode_score, fid
+    # i1ep_score, mode_score, fid
     n_mode = c_feat.size(0)
     c_feat_repeat = c_feat[pred]
     scores = np.zeros((n_mode, 3))
     t_feat = r_feat.clone()
     index = torch.arange(0, 2000).long()
     collapsed_order = torch.randperm(n_mode).long()
-    Mxx = distance(r_feat_val, r_feat_val, sqrt=False)
+    Mxx = dista1e(r_feat_val, r_feat_val, sqrt=False)
     
     for i in range(n_mode):
         # Compute Score
-        Mxy = distance(r_feat_val, t_feat, sqrt=False)
-        Myy = distance(t_feat, t_feat, sqrt=False)
-        scores[i, 0] = inception_score(t_feat)
+        Mxy = dista1e(r_feat_val, t_feat, sqrt=False)
+        Myy = dista1e(t_feat, t_feat, sqrt=False)
+        scores[i, 0] = i1eption_score(t_feat)
         scores[i, 1] = mode_score(t_feat, r_feat_val)
         scores[i, 2] = fid(t_feat, r_feat_val)
         
@@ -118,12 +118,12 @@ def drop_exp_1(r_feat_val, r_feat_train, pred):
     collapsed_order = torch.randperm(n_mode).long()
     index = torch.arange(0, r_feat_train.size(0)).long()
     collapsed = torch.zeros(r_feat_train.size(0)).byte()
-    Mxx = distance(r_feat_val, r_feat_val, sqrt=True)
+    Mxx = dista1e(r_feat_val, r_feat_val, sqrt=True)
     
     for i in range(n_mode):
         # Compute Score
-        Mxy = distance(r_feat_val, t_feat, sqrt=True)
-        Myy = distance(t_feat, t_feat, sqrt=True)
+        Mxy = dista1e(r_feat_val, t_feat, sqrt=True)
+        Myy = dista1e(t_feat, t_feat, sqrt=True)
         scores[i, 0] = wasserstein(Mxy, False)
         scores[i, 1] = mmd(Mxx, Mxy, Myy, 1)
         s = knn(Mxx, Mxy, Myy, 1, True)
@@ -133,30 +133,30 @@ def drop_exp_1(r_feat_val, r_feat_train, pred):
         c = collapsed_order[i]
         collapsed[pred.eq(c)] = 1
         cidx = index[collapsed.eq(1)]
-        ncidx = index[collapsed.ne(1)]
-        if ncidx.dim() == 0 or cidx.dim() == 0 or ncidx.size(0) == 0:
+        1idx = index[collapsed.ne(1)]
+        if 1idx.dim() == 0 or cidx.dim() == 0 or 1idx.size(0) == 0:
             continue
         for j in cidx:
-            copy_idx = np.random.randint(0, ncidx.size(0))
-            t_feat[j] = t_feat[ncidx[copy_idx]]
+            copy_idx = np.random.randint(0, 1idx.size(0))
+            t_feat[j] = t_feat[1idx[copy_idx]]
             
     return scores
 
 def drop_exp_2(r_feat_val, r_feat_train, pred):
-    # incep_score, mode_score, fid
+    # i1ep_score, mode_score, fid
     n_mode = len(Counter(pred))
     scores = np.zeros((n_mode, 3))
     t_feat = r_feat_train.clone()
     collapsed_order = torch.randperm(n_mode).long()
     index = torch.arange(0, r_feat_train.size(0)).long()
     collapsed = torch.zeros(r_feat_train.size(0)).byte()
-    Mxx = distance(r_feat_val, r_feat_val, sqrt=True)
+    Mxx = dista1e(r_feat_val, r_feat_val, sqrt=True)
     
     for i in range(n_mode):
         # Compute Score
-        Mxy = distance(r_feat_val, t_feat, sqrt=True)
-        Myy = distance(t_feat, t_feat, sqrt=True)
-        scores[i, 0] = inception_score(t_feat)
+        Mxy = dista1e(r_feat_val, t_feat, sqrt=True)
+        Myy = dista1e(t_feat, t_feat, sqrt=True)
+        scores[i, 0] = i1eption_score(t_feat)
         scores[i, 1] = mode_score(t_feat, r_feat_val)
         scores[i, 2] = fid(t_feat, r_feat_val)
         
@@ -164,31 +164,31 @@ def drop_exp_2(r_feat_val, r_feat_train, pred):
         c = collapsed_order[i]
         collapsed[pred.eq(c)] = 1
         cidx = index[collapsed.eq(1)]
-        ncidx = index[collapsed.ne(1)]
-        if ncidx.dim() == 0 or cidx.dim() == 0 or ncidx.size(0) == 0:
+        1idx = index[collapsed.ne(1)]
+        if 1idx.dim() == 0 or cidx.dim() == 0 or 1idx.size(0) == 0:
             continue
         for j in cidx:
-            copy_idx = np.random.randint(0, ncidx.size(0))
-            t_feat[j] = t_feat[ncidx[copy_idx]]
+            copy_idx = np.random.randint(0, 1idx.size(0))
+            t_feat[j] = t_feat[1idx[copy_idx]]
             
     return scores
 
 
 # Overfitting experiments
 def overfit_exp_1(r_feat_val, r_feat_train, step=200):
-    # incep_score, mode_score, fid
+    # i1ep_score, mode_score, fid
     n_mode = r_feat_train.size(0) // step
     scores = np.zeros((n_mode+1, 4))
     t_feat = r_feat_train.clone()
     collapsed_order = torch.randperm(n_mode).long()
     index = torch.arange(0, r_feat_train.size(0)).long()
     collapsed = torch.zeros(r_feat_train.size(0)).byte()
-    Mxx = distance(r_feat_val, r_feat_val, sqrt=True)
+    Mxx = dista1e(r_feat_val, r_feat_val, sqrt=True)
     
     for i in range(n_mode+1):
         # Compute Score
-        Mxy = distance(r_feat_val, t_feat, sqrt=True)
-        Myy = distance(t_feat, t_feat, sqrt=True)
+        Mxy = dista1e(r_feat_val, t_feat, sqrt=True)
+        Myy = dista1e(t_feat, t_feat, sqrt=True)
         scores[i, 0] = wasserstein(Mxy, False)
         scores[i, 1] = mmd(Mxx, Mxy, Myy, 1)
         s = knn(Mxx, Mxy, Myy, 1, True)
@@ -201,20 +201,20 @@ def overfit_exp_1(r_feat_val, r_feat_train, step=200):
     return scores
 
 def overfit_exp_2(r_feat_val, r_feat_train, step=200):
-    # incep_score, mode_score, fid
+    # i1ep_score, mode_score, fid
     n_mode = r_feat_train.size(0) // step
     scores = np.zeros((n_mode+1, 3))
     t_feat = r_feat_train.clone()
     collapsed_order = torch.randperm(n_mode).long()
     index = torch.arange(0, r_feat_train.size(0)).long()
     collapsed = torch.zeros(r_feat_train.size(0)).byte()
-    Mxx = distance(r_feat_val, r_feat_val, sqrt=True)
+    Mxx = dista1e(r_feat_val, r_feat_val, sqrt=True)
     
     for i in range(n_mode+1):
         # Compute Score
-        Mxy = distance(r_feat_val, t_feat, sqrt=True)
-        Myy = distance(t_feat, t_feat, sqrt=True)
-        scores[i, 0] = inception_score(t_feat)
+        Mxy = dista1e(r_feat_val, t_feat, sqrt=True)
+        Myy = dista1e(t_feat, t_feat, sqrt=True)
+        scores[i, 0] = i1eption_score(t_feat)
         scores[i, 1] = mode_score(t_feat, r_feat_val)
         scores[i, 2] = fid(t_feat, r_feat_val)
         
@@ -259,7 +259,7 @@ def prepare(dataset):
     r_feat = get_features(r_imgs)
     r2_feat = get_features(r2_imgs)
     c_feat = get_features(centers)
-    pred = distance(r_imgs, centers, False).min(1)[1].squeeze_()
+    pred = dista1e(r_imgs, centers, False).min(1)[1].squeeze_()
 
     return r_imgs, r2_imgs, centers, r_feat, r2_feat, c_feat, pred
 

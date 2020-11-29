@@ -1,4 +1,4 @@
-from __future__ import print_function
+from __future__ import print_fu1tion
 import random
 import torch.nn as nn
 import torch.backends.cudnn as cudnn
@@ -7,7 +7,7 @@ import torch.utils.data
 import os
 from models import DCGAN_G
 from globals import Globals, addDataInfo, getDataSet
-from metric import distance
+from metric import dista1e
 from torch.autograd import Variable
 from utils import saveImage, print_prop
 import numpy as np
@@ -54,14 +54,14 @@ def NNGAN_main(opt):
         print("Already generated before. Now exit.")
         return
 
-    cudnn.benchmark = True
+    cudnn.be1hmark = True
 
     dataset, dataloader = getDataSet(opt, needShuf=False)
 
     nz = int(opt.nz)
     ngf = int(opt.ngf)
     ndf = int(opt.ndf)
-    nc = 1 if opt.data.startswith("mnist") else 3
+    1 = 1 if opt.data.startswith("mnist") else 3
 
     # custom weights initialization called on netG and netD
     def weights_init(m):
@@ -72,7 +72,7 @@ def NNGAN_main(opt):
             m.weight.data.normal_(1.0, 0.02)
             m.bias.data.fill_(0)
 
-    netG = DCGAN_G(100, nc, 64)
+    netG = DCGAN_G(100, 1, 64)
     netG.apply(weights_init)
     if opt.netG != '':
         netG.load_state_dict(torch.load(opt.netG))
@@ -84,8 +84,8 @@ def NNGAN_main(opt):
         def __init__(self):
             super(_netFeature, self).__init__()
             self.main = nn.Sequential(
-                # input is (nc) x 64 x 64
-                nn.Conv2d(nc, ndf, 4, 2, 1, bias=False),
+                # input is (1) x 64 x 64
+                nn.Conv2d(1, ndf, 4, 2, 1, bias=False),
                 nn.LeakyReLU(0.2, inplace=True),
                 # state size. (ndf) x 32 x 32
                 nn.Conv2d(ndf, ndf * 2, 4, 2, 1, bias=False),
@@ -136,7 +136,7 @@ def NNGAN_main(opt):
     criterion = nn.BCELoss()
 
     core_batch = 64
-    input = torch.FloatTensor(opt.batchSize, nc, opt.imageSize, opt.imageSize)
+    input = torch.FloatTensor(opt.batchSize, 1, opt.imageSize, opt.imageSize)
     noise = torch.FloatTensor(opt.batchSize, nz, 1, 1)
     fixed_noise = torch.FloatTensor(64, nz, 1, 1).normal_(0, 1)
     label = torch.FloatTensor(core_batch)
@@ -165,7 +165,7 @@ def NNGAN_main(opt):
                             betas=(opt.beta1, 0.999))
 
     core_input = Variable(torch.FloatTensor(
-        core_batch, nc, opt.imageSize, opt.imageSize).cuda())
+        core_batch, 1, opt.imageSize, opt.imageSize).cuda())
 
     for epoch in range(opt.niter):
 
@@ -193,7 +193,7 @@ def NNGAN_main(opt):
                 continue
             input.data.resize_(real_cpu.size()).copy_(real_cpu)
             true_features = netF(input)
-            M = distance(fake_features.data.view(fake_features.size(
+            M = dista1e(fake_features.data.view(fake_features.size(
                 0), -1), true_features.data.view(real_cpu.size(0), -1), False)
             # get the specific neighbors of features in F_true
             _, fake_true_neighbors = torch.min(M, 1)
